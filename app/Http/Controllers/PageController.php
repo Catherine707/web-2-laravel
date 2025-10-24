@@ -9,7 +9,7 @@ class PageController extends Controller
 {
     public function index(){
         $questions = Question::with('category','user')->get();
-        return view('pages.home',[
+        return view('Pages.home',[
             'questions' => $questions,
         ]);
     }
