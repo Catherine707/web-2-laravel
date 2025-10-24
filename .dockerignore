@@ -7,7 +7,7 @@ storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
 .env
-npm-debug.log
-yarn.lock
-pnpm-lock.yaml
-.DS_Store
+*.log
+.idea
+.vscode
+

@@ -1,32 +1,37 @@
-# Imagen base PHP
-FROM php:8.2-cli
+# Etapa base: PHP CLI + extensiones necesarias
+FROM php:8.3-cli-alpine AS app
 
-# Instala extensiones necesarias
-RUN apt-get update && apt-get install -y \
-    unzip git libzip-dev libpng-dev \
- && docker-php-ext-install pdo pdo_mysql zip \
- && rm -rf /var/lib/apt/lists/*
+# Instala dependencias del sistema y extensiones de PHP
+RUN apk add --no-cache \
+    bash curl git unzip icu-dev libzip-dev oniguruma-dev mariadb-connector-c-dev \
+ && docker-php-ext-install pdo_mysql intl zip opcache
 
-# Composer
+# Instala Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Código
+# Directorio de trabajo
 WORKDIR /app
-COPY . /app
 
-# Dependencias PHP (sin dev) y optimizaciones
-RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader || true
+# Copia composer.* y luego el resto del código (mejora el cache de capas)
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
-# IMPORTANTÍSIMO: permisos para el usuario 1000 (Render)
-RUN chown -R 1000:1000 storage bootstrap/cache \
- && chmod -R ug+rwx storage bootstrap/cache
+# Ahora sí, copia el resto del proyecto
+COPY . .
 
-# Puerto que usará Render
-ENV PORT=8080
-EXPOSE 8080
+# Permisos para que Laravel pueda escribir
+RUN chmod -R ug+rwx storage bootstrap/cache
 
-# Ejecutar como usuario no-root (Render usa UID 1000)
-USER 1000
+# Opcional: compilar assets Vite si los tienes listos en package.json
+# (Descomenta si quieres construir frontend dentro del contenedor)
+# RUN apk add --no-cache nodejs npm
+# RUN npm ci && npm run build
 
-# Arranque: migra y levanta servidor embebido de PHP
-CMD php artisan migrate --force && php -S 0.0.0.0:${PORT} -t public
+# Laravel necesita saber en qué puerto escuchar. Render expone $PORT.
+ENV PORT=10000
+
+# Comando de arranque (limpia caches y arranca servidor PHP embebido)
+CMD php artisan config:clear \
+ && php artisan route:clear \
+ && php artisan view:clear \
+ && php -S 0.0.0.0:${PORT} -t public
