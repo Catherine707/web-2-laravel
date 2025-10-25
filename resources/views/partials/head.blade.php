@@ -10,7 +10,11 @@
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
-
-@fluxAppearance
+{{-- Vite (CSS + JS de la app) --}}
 @vite(['resources/css/app.css', 'resources/js/app.js'])
-@fluxStyles 
+
+{{-- Flux (CSS) --}}
+@fluxStyles
+
+{{-- Tema de Flux (opcional, para modo oscuro/tema) --}}
+@fluxAppearance
