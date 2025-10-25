@@ -7,9 +7,12 @@ use App\Livewire\Settings\Profile;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerController;
+use App\Livewire\Auth\Register;
 
 Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/question/{question}', [QuestionController::class, 'show'])->name('question.show');
+
+Route::get('/register', Register::class)->name('register');
 
 
 Route::middleware(['auth'])->group(function () {
