@@ -1,43 +1,33 @@
-# ---------- Etapa de assets (Node) ----------
-FROM node:18-alpine AS assets
-WORKDIR /app
+FROM php:8.2-fpm-alpine
 
-# Archivos necesarios para dependencias y build
-COPY package*.json vite.config.js ./
-
-# Código fuente de frontend
-COPY resources resources
-
-# Instalar dependencias: usa ci si hay lock, si no install
-RUN if [ -f package-lock.json ]; then \
-      npm ci --no-audit --no-fund; \
-    else \
-      npm install --no-audit --no-fund; \
-    fi
-
-# Compilar assets (genera /app/public/build)
-RUN npx vite build
-
-# ---------- Etapa de PHP y dependencias ----------
-FROM php:8.2-fpm-alpine AS php-deps
-
+# PHP deps
 RUN apk add --no-cache \
     bash git libpng libpng-dev libjpeg-turbo-dev libwebp-dev oniguruma-dev \
     libzip-dev zip unzip icu-dev mariadb-client \
  && docker-php-ext-configure gd --with-jpeg --with-webp \
- && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd intl zip
+ && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd intl zip \
+ && rm -rf /var/cache/apk/*
 
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# 👇 Añadimos Node y npm para compilar Vite
+RUN apk add --no-cache nodejs npm
+
 WORKDIR /var/www/html
 COPY . .
 
-# Dependencias PHP
-RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+# Instalar PHP deps
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-# Copiar el build generado por Vite
-COPY --from=assets /app/public/build ./public/build
+# 👇 Instalar deps de Node (incluye dev) y compilar assets
+#    (si no tienes package-lock.json, npm install; si lo tienes, npm ci)
+RUN if [ -f package-lock.json ]; then \
+      npm ci --include=dev --no-audit --no-fund; \
+    else \
+      npm install --include=dev --no-audit --no-fund; \
+    fi \
+ && npm run build
 
 # Permisos Laravel
 RUN mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cache \
@@ -47,4 +37,3 @@ RUN mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cac
 EXPOSE 8080
 USER www-data
 CMD php -S 0.0.0.0:8080 -t public
-
