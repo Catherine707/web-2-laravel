@@ -1,7 +1,7 @@
 <?php
 
 namespace Tests\Feature\Auth;
-
+use App\Providers\RouteServiceProvider;
 use App\Livewire\Auth\Register;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
