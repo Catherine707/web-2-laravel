@@ -1,12 +1,13 @@
 <?php
 
 namespace Tests\Feature\Auth;
-
+use App\Providers\RouteServiceProvider;
 use App\Livewire\Auth\Login;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use Tests\TestCase;
+use Tests\TestCase;`
+
 
 class AuthenticationTest extends TestCase
 {
@@ -30,7 +31,7 @@ class AuthenticationTest extends TestCase
 
         $response
             ->assertHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+            ->assertRedirect(RouteServiceProvider::HOME);
 
         $this->assertAuthenticated();
     }

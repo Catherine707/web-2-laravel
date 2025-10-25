@@ -29,7 +29,7 @@ class RegistrationTest extends TestCase
 
         $response
             ->assertHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+            ->assertRedirect(RouteServiceProvider::HOME);
 
         $this->assertAuthenticated();
     }
