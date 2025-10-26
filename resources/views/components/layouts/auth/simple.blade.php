@@ -18,7 +18,8 @@
             </div>
         </div>
         
-    <script src="/livewire/livewire.min.js" data-navigate-once defer></script>
+    <script src="{{ route(''livewire.shim'') }}" data-navigate-once defer></script>
 </body>
 </html>
+
 

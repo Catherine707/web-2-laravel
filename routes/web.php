@@ -39,14 +39,13 @@ Route::view('dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('d
 require __DIR__ . '/auth.php';
 
 
+Route::get('/health', fn () => 'OK '.now());
+
+
 Route::get('/livewire/livewire.min.js', function () {
     $path = public_path('flux/flux.min.js');
     abort_unless(file_exists($path), 404);
-
     return response()->file($path, [
         'Content-Type' => 'application/javascript; charset=UTF-8',
     ]);
-});
-
-Route::get('/health', fn () => 'OK '.now());
-
+})->name('livewire.shim');
