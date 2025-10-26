@@ -11,36 +11,27 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 
-
-
-// Home (lista de últimas preguntas en portada)
+// Home
 Route::get('/', [PageController::class, 'index'])->name('home');
 
-// Foro (listado y detalle)
+// Foro
 Route::get('/foro', [QuestionController::class, 'index'])->name('questions.index');
 Route::get('/question/{question}', [QuestionController::class, 'show'])->name('question.show');
 
-// Dashboard (requiere autenticación + email verificado)
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// Dashboard
+Route::view('dashboard', 'dashboard')->middleware(['auth','verified'])->name('dashboard');
 
+// Rutas autenticadas
 Route::middleware(['auth'])->group(function () {
-    // Crear pregunta
     Route::get('/preguntar', [QuestionController::class, 'create'])->name('questions.create');
     Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
 
-    // Editar / Actualizar pregunta
     Route::get('/questions/{question}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
     Route::put('/questions/{question}', [QuestionController::class, 'update'])->name('questions.update');
-
-    // Eliminar pregunta
     Route::delete('/questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
 
-    // Responder pregunta
     Route::post('/answers/{question}', [AnswerController::class, 'store'])->name('answers.store');
 
-    // Settings (Livewire)
     Route::redirect('settings', 'settings/profile');
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
@@ -49,7 +40,6 @@ Route::middleware(['auth'])->group(function () {
 
 
 if (app()->environment('local')) {
-
     Route::get('/__health', function () {
         return [
             'sqlite_path'   => config('database.connections.sqlite.database'),
@@ -58,16 +48,34 @@ if (app()->environment('local')) {
         ];
     })->name('__health');
 
-
     Route::get('/livewire/livewire.min.js', function () {
         $path = public_path('flux/flux.min.js');
         abort_unless(file_exists($path), 404);
-
         return response()->file($path, [
             'Content-Type' => 'application/javascript; charset=UTF-8',
         ]);
     })->name('livewire.shim');
 }
 
+
+if (! app()->environment('local')) {
+    Route::get('/livewire/livewire.js', function () {
+        $path = base_path('vendor/livewire/livewire/dist/livewire.js');
+        abort_unless(file_exists($path), 404);
+        return response()->file($path, [
+            'Content-Type' => 'application/javascript; charset=UTF-8',
+            'Cache-Control' => 'public, max-age=31536000',
+        ]);
+    });
+
+    Route::get('/livewire/livewire.min.js', function () {
+        $path = base_path('vendor/livewire/livewire/dist/livewire.min.js');
+        abort_unless(file_exists($path), 404);
+        return response()->file($path, [
+            'Content-Type' => 'application/javascript; charset=UTF-8',
+            'Cache-Control' => 'public, max-age=31536000',
+        ]);
+    });
+}
 
 require __DIR__ . '/auth.php';
