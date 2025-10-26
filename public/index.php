@@ -5,41 +5,58 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-// Determine if the application is in maintenance mode...
+
+$desired = getenv('DB_DATABASE');                           
+$fallback = '/tmp/sqlite/database.sqlite';                  
+$sqlitePath = $desired ?: $fallback;
+
+
+$dir = dirname($sqlitePath);
+if (!is_dir($dir) && !@mkdir($dir, 0777, true)) {
+    $sqlitePath = $fallback;
+    $dir = dirname($sqlitePath);
+}
+if (!is_dir($dir)) {
+    @mkdir($dir, 0777, true);
+}
+if (!file_exists($sqlitePath)) {
+    @touch($sqlitePath);
+}
+
+putenv('DB_CONNECTION=sqlite');
+putenv("DB_DATABASE=".$sqlitePath);
+
+
+
+
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
     require $maintenance;
 }
 
-// Register the Composer autoloader...
+// Autoloader…
 require __DIR__.'/../vendor/autoload.php';
 
-// Bootstrap Laravel and handle the request...
+// Bootstrap Laravel…
 /** @var Application $app */
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
-if (getenv('APP_ENV') === 'production' && getenv('DB_CONNECTION') === 'sqlite') {
+$app->make('config')->set('database.default', 'sqlite');
+$app->make('config')->set('database.connections.sqlite.database', $sqlitePath);
 
-    $dbPath = getenv('DB_DATABASE') ?: __DIR__ . '/../storage/database.sqlite';
+$flag = '/tmp/_migrated_once.flag';
+try {
+    if (!file_exists($flag)) {
 
-
-    if ($dbPath && ! file_exists($dbPath)) {
-        @mkdir(dirname($dbPath), 0777, true);
-        @touch($dbPath);
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--force' => true,
+            '--no-interaction' => true,
+        ]);
+        @file_put_contents($flag, date('c'));
     }
+} catch (\Throwable $e) {
 
-    $flag = __DIR__ . '/../storage/framework/.sqlite_bootstrapped';
-    if (file_exists($dbPath) && ! file_exists($flag)) {
-        try {
-            $app->make(Illuminate\Contracts\Console\Kernel::class)->call('migrate', [
-                '--force' => true,
-                '--no-interaction' => true,
-            ]);
-            @file_put_contents($flag, date('c'));
-        } catch (\Throwable $e) {
-            error_log('[sqlite bootstrap] ' . $e->getMessage());
-        }
-    }
 }
 
-
+// Request…
 $app->handleRequest(Request::capture());
