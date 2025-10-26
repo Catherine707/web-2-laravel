@@ -19,7 +19,7 @@ class Register extends Component
     public string $password = '';
     public string $password_confirmation = '';
 
-    public function register(): void
+    public function register()
     {
         $validated = $this->validate([
             'name' => ['required','string','max:255'],

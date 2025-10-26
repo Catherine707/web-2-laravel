@@ -46,7 +46,7 @@ class Login extends Component
         );
     }
 
-    protected function ensureIsNotRateLimited(): void
+    protected function ensureIsNotRateLimited()
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) return;
 
