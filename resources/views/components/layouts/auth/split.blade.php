@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         @include('partials.head')
@@ -40,5 +40,7 @@
         </div>
         <script src="{{ asset('livewire/livewire.min.js') }}" data-navigate-once></script>
 
-    </body>
+    <script src="/livewire/livewire.min.js" data-navigate-once defer></script>
+</body>
 </html>
+
