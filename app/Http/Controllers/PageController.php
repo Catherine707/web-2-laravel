@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Question;
+use Illuminate\Support\Facades\Schema;
 
 class PageController extends Controller
 {
-    public function index(){
-        $questions = Question::with('category','user')->get();
-        return view('Pages.home',[
-            'questions' => $questions,
-        ]);
+    public function index()
+    {
+        $questions = Schema::hasTable('questions')
+            ? Question::with(['category','user'])->latest()->get()
+            : collect();
+
+        return view('pages.home', ['questions' => $questions]);
     }
 }

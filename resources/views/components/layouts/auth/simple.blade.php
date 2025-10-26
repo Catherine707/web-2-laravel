@@ -17,8 +17,8 @@
                 </div>
             </div>
         </div>
-        
-    <script src="{{ route(''livewire.shim'') }}" data-navigate-once defer></script>
+    {{-- Livewire (Flux) --}}
+<script src="{{ asset('flux/flux.min.js') }}" data-navigate-once defer></script>
 </body>
 </html>
 

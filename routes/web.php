@@ -1,20 +1,32 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
-use App\Livewire\Settings\Profile;
+use Illuminate\Support\Facades\Schema;
+
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerController;
-use App\Livewire\Auth\Register;
-use Illuminate\Support\Facades\Response;
 
+use App\Livewire\Settings\Appearance;
+use App\Livewire\Settings\Password;
+use App\Livewire\Settings\Profile;
+
+
+// Home
 Route::get('/', [PageController::class, 'index'])->name('home');
+
+// Foro (listar y ver)
+Route::get('/foro', [QuestionController::class, 'index'])->name('questions.index');
 Route::get('/question/{question}', [QuestionController::class, 'show'])->name('question.show');
 
+// Dashboard (requiere auth + verified)
+Route::view('dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+
 Route::middleware(['auth'])->group(function () {
-    // Preguntar (crear)
+    // Preguntar (crear/guardar)
     Route::get('/preguntar', [QuestionController::class, 'create'])->name('questions.create');
     Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
 
@@ -25,27 +37,34 @@ Route::middleware(['auth'])->group(function () {
     // Eliminar
     Route::delete('/questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
 
-    // Responder 
+    // Responder
     Route::post('/answers/{question}', [AnswerController::class, 'store'])->name('answers.store');
 
+    // Settings (Livewire)
     Route::redirect('settings', 'settings/profile');
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
 
-Route::view('dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('dashboard');
 
-require __DIR__ . '/auth.php';
-
-
-Route::get('/health', fn () => 'OK '.now());
+Route::get('/__health', function () {
+    return [
+        'sqlite_path'   => config('database.connections.sqlite.database'),
+        'sqlite_exists' => file_exists(config('database.connections.sqlite.database')),
+        'questions_tbl' => Schema::hasTable('questions'),
+    ];
+});
 
 
 Route::get('/livewire/livewire.min.js', function () {
     $path = public_path('flux/flux.min.js');
     abort_unless(file_exists($path), 404);
+
     return response()->file($path, [
         'Content-Type' => 'application/javascript; charset=UTF-8',
     ]);
 })->name('livewire.shim');
+
+
+require __DIR__ . '/auth.php';

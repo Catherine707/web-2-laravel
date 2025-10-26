@@ -2,11 +2,10 @@
 
 namespace App\Livewire\Auth;
 
-use App\Providers\RouteServiceProvider; 
+use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
@@ -38,7 +37,7 @@ class Login extends Component
         }
 
         RateLimiter::clear($this->throttleKey());
-        Session::regenerate();
+        session()->regenerate(); // <- aquí
 
         $this->redirectIntended(
             default: RouteServiceProvider::HOME,
@@ -46,7 +45,7 @@ class Login extends Component
         );
     }
 
-    protected function ensureIsNotRateLimited()
+    protected function ensureIsNotRateLimited(): void
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) return;
 
@@ -57,13 +56,18 @@ class Login extends Component
         throw ValidationException::withMessages([
             'email' => __('auth.throttle', [
                 'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
+                'minutes' => (int) ceil($seconds / 60),
             ]),
         ]);
     }
 
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
+    }
+
+    public function render()
+    {
+        return view('livewire.auth.login');
     }
 }
