@@ -5,20 +5,23 @@ namespace App\Http\Middleware;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
 {
     /**
      * Handle an incoming request.
+     *
+     * @param  \Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
-            if (auth()->guard($guard)->check()) {
-                // Si ya está autenticado y visita /login o /register → foro
+            if (Auth::guard($guard)->check()) {
+                // Ya está logueado → manda al foro
                 return redirect()->intended(RouteServiceProvider::HOME);
             }
         }

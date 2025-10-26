@@ -1,34 +1,76 @@
-﻿<nav class="flex items-center justify-between h-16">
-  <div>
-    <a href="{{ route('home') }}">
-      <x-forum.logo />
-    </a>
-  </div>
+﻿<?php
 
-  <div class="flex gap-4">
-    <a href="{{ route('home') }}" class="text-sm font-semibold">Foro</a>
-    <a href="#" class="text-sm font-semibold">Blog</a>
-  </div>
+namespace App\Livewire\Auth;
 
-  <div class="flex items-center gap-3">
-    @auth
-      <span class="text-sm text-white-600">Hola, {{ auth()->user()->name }}</span>
+use App\Providers\RouteServiceProvider;
+use Illuminate\Auth\Events\Lockout;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
-      <a href="{{ route('questions.create') }}"
-         class="relative z-50 px-3 py-1.5 rounded-sm border border-[#8b1e2d] bg-[#8b1e2d] text-white hover:bg-[#a12c3b] hover:border-[#a12c3b] transition">
-        Preguntar
-      </a>
+#[Layout('components.layouts.auth')]
+class Login extends Component
+{
+    #[Validate('required|string|email')]
+    public string $email = '';
 
-      <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button class="text-sm font-semibold">Salir</button>
-      </form>
-    @else
-      <a href="{{ route('login') }}" class="text-sm font-semibold">Iniciar sesion</a>
-      <a href="{{ route('register') }}" class="text-sm font-semibold">Registrarse</a>
-    @endauth
-  </div>
-</nav>
+    #[Validate('required|string')]
+    public string $password = '';
+
+    public bool $remember = false;
+
+    public function login(): void
+    {
+        $this->validate();
+        $this->ensureIsNotRateLimited();
+
+        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }
+
+        RateLimiter::clear($this->throttleKey());
+        session()->regenerate();
+
+        // ✅ redirección confiable al foro
+        return redirect()->intended(route('questions.index'));
+        // o, si prefieres:
+        // $this->redirectIntended(default: route('questions.index', absolute: false));
+    }
+
+    protected function ensureIsNotRateLimited(): void
+    {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) return;
+
+        event(new Lockout(request()));
+
+        $seconds = RateLimiter::availableIn($this->throttleKey());
+
+        throw ValidationException::withMessages([
+            'email' => __('auth.throttle', [
+                'seconds' => $seconds,
+                'minutes' => (int) ceil($seconds / 60),
+            ]),
+        ]);
+    }
+
+    protected function throttleKey(): string
+    {
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
+    }
+
+    public function render()
+    {
+        return view('livewire.auth.login');
+    }
+}
 
 
 

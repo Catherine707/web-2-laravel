@@ -32,5 +32,9 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }
