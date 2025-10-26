@@ -19,7 +19,9 @@ Route::get('/foro', [QuestionController::class, 'index'])->name('questions.index
 Route::get('/question/{question}', [QuestionController::class, 'show'])->name('question.show');
 
 // Dashboard
-Route::view('dashboard', 'dashboard')->middleware(['auth','verified'])->name('dashboard');
+Route::view('dashboard', 'dashboard')
+    ->middleware(['auth','verified'])
+    ->name('dashboard');
 
 // Rutas autenticadas
 Route::middleware(['auth'])->group(function () {
@@ -38,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
 
-
+// Utilidades solo en local (opcional)
 if (app()->environment('local')) {
     Route::get('/__health', function () {
         return [
@@ -47,35 +49,32 @@ if (app()->environment('local')) {
             'questions_tbl' => Schema::hasTable('questions'),
         ];
     })->name('__health');
-
-    Route::get('/livewire/livewire.min.js', function () {
-        $path = public_path('flux/flux.min.js');
-        abort_unless(file_exists($path), 404);
-        return response()->file($path, [
-            'Content-Type' => 'application/javascript; charset=UTF-8',
-        ]);
-    })->name('livewire.shim');
 }
 
+/*
+|--------------------------------------------------------------------------
+| Shim de Livewire (todas las envs)
+| Mapea las URLs generadas por @livewireScripts al bundle en /public/flux
+|--------------------------------------------------------------------------
+*/
+Route::get('/livewire/livewire.js', function () {
+    $path = public_path('flux/flux.min.js');
+    abort_unless(file_exists($path), 404);
 
-if (! app()->environment('local')) {
-    Route::get('/livewire/livewire.js', function () {
-        $path = base_path('vendor/livewire/livewire/dist/livewire.js');
-        abort_unless(file_exists($path), 404);
-        return response()->file($path, [
-            'Content-Type' => 'application/javascript; charset=UTF-8',
-            'Cache-Control' => 'public, max-age=31536000',
-        ]);
-    });
+    return response()->file($path, [
+        'Content-Type'  => 'application/javascript; charset=UTF-8',
+        'Cache-Control' => 'public, max-age=31536000',
+    ]);
+});
 
-    Route::get('/livewire/livewire.min.js', function () {
-        $path = base_path('vendor/livewire/livewire/dist/livewire.min.js');
-        abort_unless(file_exists($path), 404);
-        return response()->file($path, [
-            'Content-Type' => 'application/javascript; charset=UTF-8',
-            'Cache-Control' => 'public, max-age=31536000',
-        ]);
-    });
-}
+Route::get('/livewire/livewire.min.js', function () {
+    $path = public_path('flux/flux.min.js');
+    abort_unless(file_exists($path), 404);
+
+    return response()->file($path, [
+        'Content-Type'  => 'application/javascript; charset=UTF-8',
+        'Cache-Control' => 'public, max-age=31536000',
+    ]);
+});
 
 require __DIR__ . '/auth.php';
