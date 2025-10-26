@@ -52,6 +52,6 @@ Route::get('/livewire/livewire.min.js', function () {
 });
 
 
-// ✅ Ruta de salud
+
 Route::get('/health', fn () => 'OK '.now());
 
