@@ -7,7 +7,7 @@
     {{-- CSRF para peticiones POST/AJAX --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Foro de programaciÃ³n</title>
+    <title>Foro de programacionn</title>
 
     @isset($attributes) @endisset
     @livewireStyles
@@ -24,7 +24,7 @@
 
         {{-- HERO --}}
         <div class="relative flex-1 flex items-center justify-center">
-            {{-- Fondo decorativo SIEMPRE detrÃ¡s --}}
+
             <div class="absolute inset-x-0 -top-40 sm:-top-80 transform-gpu blur-3xl pointer-events-none -z-10">
                 <div
                     class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36rem] -translate-x-1/2 rotate-[30deg]

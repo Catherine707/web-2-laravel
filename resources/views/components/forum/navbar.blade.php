@@ -24,7 +24,7 @@
         <button class="text-sm font-semibold">Salir</button>
       </form>
     @else
-      <a href="{{ route('login') }}" class="text-sm font-semibold">Iniciar sesiÃ³n</a>
+      <a href="{{ route('login') }}" class="text-sm font-semibold">Iniciar sesion</a>
       <a href="{{ route('register') }}" class="text-sm font-semibold">Registrarse</a>
     @endauth
   </div>
