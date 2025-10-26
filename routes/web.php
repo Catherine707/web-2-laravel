@@ -8,11 +8,10 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerController;
 use App\Livewire\Auth\Register;
+use Illuminate\Support\Facades\Response;
 
 Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/question/{question}', [QuestionController::class, 'show'])->name('question.show');
-
-
 
 Route::middleware(['auth'])->group(function () {
     // Preguntar (crear)
@@ -35,18 +34,24 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
 
-
 Route::view('dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('dashboard');
-
 
 require __DIR__ . '/auth.php';
 
+
 Route::get('/livewire/livewire.min.js', function () {
-    $path = public_path('flux/flux.min.js');
-    abort_unless(file_exists($path), 404);
-    return response()->file($path, [
+    $path = base_path('vendor/livewire/flux/dist/flux.min.js');
+
+    if (! file_exists($path)) {
+        abort(404);
+    }
+
+    return Response::file($path, [
         'Content-Type' => 'application/javascript; charset=UTF-8',
     ]);
 });
 
+
+// ✅ Ruta de salud
 Route::get('/health', fn () => 'OK '.now());
+
