@@ -38,9 +38,10 @@
                 </div>
             </div>
         </div>
-        <script src="{{ asset('livewire/livewire.min.js') }}" data-navigate-once></script>
+        
 
-    <script src="/livewire/livewire.min.js" data-navigate-once defer></script>
+    
 </body>
 </html>
+
 
