@@ -11,14 +11,24 @@
                 <x-app-logo />
             </a>
 
+            {{-- Navbar (desktop) --}}
             <flux:navbar class="-mb-px max-lg:hidden">
                 <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                     {{ __('Dashboard') }}
+                </flux:navbar.item>
+
+                {{-- Enlaces del foro --}}
+                <flux:navbar.item :href="route('questions.index')" :current="request()->routeIs('questions.*')" wire:navigate>
+                    {{ __('Foro') }}
+                </flux:navbar.item>
+                <flux:navbar.item :href="route('questions.create')" wire:navigate>
+                    {{ __('Preguntar') }}
                 </flux:navbar.item>
             </flux:navbar>
 
             <flux:spacer />
 
+            {{-- Accesos rápidos --}}
             <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
                 <flux:tooltip :content="__('Search')" position="bottom">
                     <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="magnifying-glass" href="#" :label="__('Search')" />
@@ -38,57 +48,63 @@
                         icon="book-open-text"
                         href="https://laravel.com/docs/starter-kits#livewire"
                         target="_blank"
-                        label="Documentation"
+                        :label="__('Documentation')"
                     />
                 </flux:tooltip>
             </flux:navbar>
 
-            <!-- Desktop User Menu -->
-            <flux:dropdown position="top" align="end">
-                <flux:profile
-                    class="cursor-pointer"
-                    :initials="auth()->user()->initials()"
-                />
+            {{-- Menú de usuario (desktop) --}}
+            @auth
+                <flux:dropdown position="top" align="end">
+                    <flux:profile class="cursor-pointer" :initials="auth()->user()?->initials()" />
 
-                <flux:menu>
-                    <flux:menu.radio.group>
-                        <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
-                                    >
-                                        {{ auth()->user()->initials() }}
+                    <flux:menu>
+                        <flux:menu.radio.group>
+                            <div class="p-0 text-sm font-normal">
+                                <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
+                                    <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
+                                        <span class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                                            {{ auth()->user()?->initials() }}
+                                        </span>
                                     </span>
-                                </span>
 
-                                <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
+                                    <div class="grid flex-1 text-start text-sm leading-tight">
+                                        <span class="truncate font-semibold">{{ auth()->user()?->name }}</span>
+                                        <span class="truncate text-xs">{{ auth()->user()?->email }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </flux:menu.radio.group>
+                        </flux:menu.radio.group>
 
-                    <flux:menu.separator />
+                        <flux:menu.separator />
 
-                    <flux:menu.radio.group>
-                        <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
-                    </flux:menu.radio.group>
+                        <flux:menu.radio.group>
+                            <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>
+                                {{ __('Settings') }}
+                            </flux:menu.item>
+                        </flux:menu.radio.group>
 
-                    <flux:menu.separator />
+                        <flux:menu.separator />
 
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
-                        @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                            {{ __('Log Out') }}
-                        </flux:menu.item>
-                    </form>
-                </flux:menu>
-            </flux:dropdown>
+                        <form method="POST" action="{{ route('logout') }}" class="w-full">
+                            @csrf
+                            <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
+                                {{ __('Log Out') }}
+                            </flux:menu.item>
+                        </form>
+                    </flux:menu>
+                </flux:dropdown>
+            @else
+                <a href="{{ route('login') }}" wire:navigate class="px-3 py-2">
+                    {{ __('Iniciar sesión') }}
+                </a>
+                <a href="{{ route('register') }}" wire:navigate class="px-3 py-2">
+                    {{ __('Crear cuenta') }}
+                </a>
+            @endauth
         </flux:header>
 
-        <!-- Mobile Menu -->
+        {{-- Menú móvil --}}
         <flux:sidebar stashable sticky class="lg:hidden border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
@@ -99,7 +115,15 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')">
                     <flux:navlist.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                      {{ __('Dashboard') }}
+                        {{ __('Dashboard') }}
+                    </flux:navlist.item>
+
+                    {{-- Enlaces del foro (móvil) --}}
+                    <flux:navlist.item :href="route('questions.index')" :current="request()->routeIs('questions.*')" wire:navigate>
+                        {{ __('Foro') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('questions.create')" wire:navigate>
+                        {{ __('Preguntar') }}
                     </flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
@@ -118,8 +142,5 @@
         </flux:sidebar>
 
         {{ $slot }}
-
-         
     </body>
 </html>
-
