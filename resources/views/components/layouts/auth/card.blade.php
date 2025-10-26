@@ -21,6 +21,7 @@
                 </div>
             </div>
         </div>
-        @fluxScripts
+        <script src="{{ asset('livewire/livewire.min.js') }}" data-navigate-once></script>
+
     </body>
 </html>
