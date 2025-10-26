@@ -9,7 +9,6 @@
 
     <title>Foro de programación</title>
 
-    {{-- Estilos de Livewire (v3) si los usas --}}
     @isset($attributes) @endisset
     @livewireStyles
 
@@ -76,13 +75,12 @@
         </div>
     </div>
 
-    {{-- Contenido de la página (listado) --}}
+
     <div class="mx-auto max-w-4xl px-4 mb-8">
         {{ $slot }}
     </div>
 
-    {{-- Livewire SPA navigate (si usas wire:navigate en tus enlaces) --}}
-    <livewire:navigate />
+
 
     {{-- Scripts de Livewire (v3) --}}
     @livewireScripts
