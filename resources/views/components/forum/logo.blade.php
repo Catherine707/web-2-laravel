@@ -1,10 +1,10 @@
-{{-- resources/views/components/forum/logo.blade.php --}}
+﻿{{-- resources/views/components/forum/logo.blade.php --}}
 @props([
-    // Tamaño por defecto (puedes cambiar a "h-8 w-8" si prefieres ancho fijo)
+    // TamaÃ±o por defecto (puedes cambiar a "h-8 w-8" si prefieres ancho fijo)
     'size'   => 'h-8',
     // Grosor del trazo
     'stroke' => '1.5',
-    // Título accesible opcional
+    // TÃ­tulo accesible opcional
     'title'  => null,
 ])
 

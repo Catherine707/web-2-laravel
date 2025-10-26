@@ -1,4 +1,4 @@
-<x-forum.layouts.app>
+﻿<x-forum.layouts.app>
 
 <div class="flex items-center gap-2 w-full my-8">
     
@@ -25,7 +25,7 @@
                 @endcan
 
                 @can('delete', $question)
-                <form action="{{ route('questions.destroy', $question) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta pregunta?');">
+                <form action="{{ route('questions.destroy', $question) }}" method="POST" onsubmit="return confirm('Â¿EstÃ¡s seguro de eliminar esta pregunta?');">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="rounded-md bg-red-600 hover:bg-red-500 px-2 py-1 text-xs font-semibold text-white cursor-pointer">
@@ -92,7 +92,7 @@
     </form>
     @else
     <p class="text-sm text-gray-500">
-            Debes <a class="underline" href="{{ route('login') }}">iniciar sesión</a> para responder.
+            Debes <a class="underline" href="{{ route('login') }}">iniciar sesiÃ³n</a> para responder.
         </p>
     @endauth
 </div>

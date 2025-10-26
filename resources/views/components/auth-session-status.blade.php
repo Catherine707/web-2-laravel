@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'status',
 ])
 
@@ -7,3 +7,4 @@
         {{ $status }}
     </div>
 @endif
+

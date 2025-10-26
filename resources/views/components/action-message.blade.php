@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'on',
 ])
 
@@ -12,3 +12,4 @@
 >
     {{ $slot->isEmpty() ? __('Saved.') : $slot }}
 </div>
+

@@ -2,3 +2,4 @@
     {{ $slot }}
 </x-layouts.auth.simple>
 
+

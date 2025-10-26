@@ -1,4 +1,4 @@
-<x-forum.layouts.home>
+﻿<x-forum.layouts.home>
     <div class="max-w-3xl mx-auto py-6">
         <h1 class="text-2xl font-bold mb-4">Editar pregunta</h1>
 
@@ -17,7 +17,7 @@
             @method('PUT')
 
             <div>
-                <label class="block text-sm font-medium">Categoría</label>
+                <label class="block text-sm font-medium">CategorÃ­a</label>
                 <select name="category_id" class="w-full border rounded p-2" required>
                     @foreach($categories as $cat)
                         <option value="{{ $cat->id }}" @selected(old('category_id',$question->category_id)==$cat->id)>
@@ -28,7 +28,7 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium">Título</label>
+                <label class="block text-sm font-medium">TÃ­tulo</label>
                 <input name="title" value="{{ old('title',$question->title) }}" class="w-full border rounded p-2" required />
             </div>
 
@@ -44,3 +44,4 @@
         </form>
     </div>
 </x-forum.layouts.home>
+

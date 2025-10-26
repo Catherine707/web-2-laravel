@@ -1,4 +1,4 @@
-{{-- Credit: Lucide (https://lucide.dev) --}}
+﻿{{-- Credit: Lucide (https://lucide.dev) --}}
 
 @props([
     'variant' => 'outline',
@@ -41,3 +41,4 @@
     <path d="m7 15 5 5 5-5" />
     <path d="m7 9 5-5 5 5" />
 </svg>
+

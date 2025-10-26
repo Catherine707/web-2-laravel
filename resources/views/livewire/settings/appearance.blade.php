@@ -1,4 +1,4 @@
-<section class="w-full">
+﻿<section class="w-full">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Appearance')" :subheading=" __('Update the appearance settings for your account')">
@@ -9,3 +9,4 @@
         </flux:radio.group>
     </x-settings.layout>
 </section>
+

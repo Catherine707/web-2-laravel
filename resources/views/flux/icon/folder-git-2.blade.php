@@ -1,4 +1,4 @@
-{{-- Credit: Lucide (https://lucide.dev) --}}
+﻿{{-- Credit: Lucide (https://lucide.dev) --}}
 
 @props([
     'variant' => 'outline',
@@ -43,3 +43,4 @@
     <path d="M18 19c-2.8 0-5-2.2-5-5v8" />
     <circle cx="20" cy="19" r="2" />
 </svg>
+

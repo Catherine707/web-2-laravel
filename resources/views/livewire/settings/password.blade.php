@@ -1,4 +1,4 @@
-<section class="w-full">
+﻿<section class="w-full">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
@@ -37,3 +37,4 @@
         </form>
     </x-settings.layout>
 </section>
+

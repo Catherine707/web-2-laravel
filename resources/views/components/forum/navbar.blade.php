@@ -1,4 +1,4 @@
-<nav class="flex items-center justify-between h-16">
+﻿<nav class="flex items-center justify-between h-16">
   <div>
     <a href="{{ route('home') }}">
       <x-forum.logo />
@@ -24,9 +24,10 @@
         <button class="text-sm font-semibold">Salir</button>
       </form>
     @else
-      <a href="{{ route('login') }}" class="text-sm font-semibold">Iniciar sesión</a>
+      <a href="{{ route('login') }}" class="text-sm font-semibold">Iniciar sesiÃ³n</a>
       <a href="{{ route('register') }}" class="text-sm font-semibold">Registrarse</a>
     @endauth
   </div>
 </nav>
+
 

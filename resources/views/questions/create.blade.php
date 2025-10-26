@@ -1,4 +1,4 @@
-<x-forum.layouts.app>
+﻿<x-forum.layouts.app>
     <div class="max-w-3xl mx-auto py-10 px-6">
         <h1 class="text-3xl font-bold mb-6 text-gray-100">Crear pregunta</h1>
 
@@ -15,15 +15,15 @@
         <form method="POST" action="{{ route('questions.store') }}" class="space-y-6">
             @csrf
 
-            <!-- Categoría -->
+            <!-- CategorÃ­a -->
             <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Categoría</label>
+                <label class="block text-sm font-medium text-gray-200 mb-2">CategorÃ­a</label>
                 <div class="relative">
                     <select name="category_id"
                             class="w-full rounded-md border border-gray-600 bg-white text-gray-900 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#6a0f1c]"
                             style="color-scheme: light"
                             required>
-                        <option value="">-- Selecciona categoría --</option>
+                        <option value="">-- Selecciona categorÃ­a --</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}" @selected(old('category_id')==$cat->id)>
                                 {{ $cat->name }}
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Título</label>
+                <label class="block text-sm font-medium text-gray-200 mb-2">TÃ­tulo</label>
                 <input name="title"
                         value="{{ old('title') }}"
                         class="w-full rounded-md border border-gray-600 bg-white text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6a0f1c]"
@@ -65,4 +65,5 @@
         </form>
     </div>
 </x-forum.layouts.app>
+
 

@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-6">
+﻿<div class="flex flex-col gap-6">
     <x-auth-header :title="__('Reset password')" :description="__('Please enter your new password below')" />
 
     <!-- Session Status -->
@@ -43,3 +43,4 @@
         </div>
     </form>
 </div>
+

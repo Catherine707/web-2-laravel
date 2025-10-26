@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'expandable' => false,
     'expanded' => true,
     'heading' => null,
@@ -49,3 +49,4 @@
 </div>
 
 <?php endif; ?>
+

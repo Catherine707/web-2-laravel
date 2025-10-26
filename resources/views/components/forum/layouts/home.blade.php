@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es" class="h-full">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     {{-- CSRF para peticiones POST/AJAX --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Foro de programación</title>
+    <title>Foro de programaciÃ³n</title>
 
     @isset($attributes) @endisset
     @livewireStyles
@@ -24,7 +24,7 @@
 
         {{-- HERO --}}
         <div class="relative flex-1 flex items-center justify-center">
-            {{-- Fondo decorativo SIEMPRE detrás --}}
+            {{-- Fondo decorativo SIEMPRE detrÃ¡s --}}
             <div class="absolute inset-x-0 -top-40 sm:-top-80 transform-gpu blur-3xl pointer-events-none -z-10">
                 <div
                     class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36rem] -translate-x-1/2 rotate-[30deg]
@@ -38,7 +38,7 @@
             <div class="max-w-2xl relative z-10 pointer-events-auto">
                 <div class="hidden sm:mb-8 sm:flex sm:justify-center">
                     <div class="rounded-full px-4 py-2 text-sm text-gray-600 border border-gray-300 bg-white/70 backdrop-blur-sm">
-                        Resuelve tus preguntas de programación.
+                        Resuelve tus preguntas de programaciÃ³n.
                         <a href="{{ route('home') }}" class="font-semibold text-indigo-600 hover:underline">
                             Acerca de &rarr;
                         </a>
@@ -50,8 +50,8 @@
                         Bienvenido a tu foro favorito
                     </h1>
                     <p class="my-8 text-lg font-medium text-gray-500 sm:text-xl">
-                        Es un espacio para compartir, aprender y crecer en el mundo de la programación.
-                        Únete a nuestra comunidad, participa en discusiones y aprende de otros profesionales.
+                        Es un espacio para compartir, aprender y crecer en el mundo de la programaciÃ³n.
+                        Ãšnete a nuestra comunidad, participa en discusiones y aprende de otros profesionales.
                     </p>
 
                     <div class="flex items-center justify-center gap-6">
@@ -86,3 +86,4 @@
     @livewireScripts
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-6">
+﻿<div class="flex flex-col gap-6">
     <x-auth-header
         :title="__('Confirm password')"
         :description="__('This is a secure area of the application. Please confirm your password before continuing.')"
@@ -22,3 +22,4 @@
         <flux:button variant="primary" type="submit" class="w-full">{{ __('Confirm') }}</flux:button>
     </form>
 </div>
+
