@@ -1,20 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{-- CSRF para peticiones POST/AJAX --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Foro de programación</title>
+
+    {{-- Estilos de Livewire (v3) si los usas --}}
+    @isset($attributes) @endisset
+    @livewireStyles
+
+    {{-- Vite (css + js) --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-white text-gray-900">
-    <div class="h-screen flex flex-col">
+<body class="bg-white text-gray-900 h-full">
+    <div class="min-h-full flex flex-col">
         {{-- Navbar --}}
         <div class="px-4">
             <x-forum.navbar />
         </div>
 
         {{-- HERO --}}
-        <div class="relative h-full flex items-center justify-center">
+        <div class="relative flex-1 flex items-center justify-center">
             {{-- Fondo decorativo SIEMPRE detrás --}}
             <div class="absolute inset-x-0 -top-40 sm:-top-80 transform-gpu blur-3xl pointer-events-none -z-10">
                 <div
@@ -57,7 +67,7 @@
                                 Preguntar
                             </a>
                             <a href="{{ route('register') }}" class="text-sm font-semibold text-gray-900 hover:underline">
-                                Login &rarr;
+                                Crear cuenta &rarr;
                             </a>
                         @endauth
                     </div>
@@ -70,6 +80,11 @@
     <div class="mx-auto max-w-4xl px-4 mb-8">
         {{ $slot }}
     </div>
+
+    {{-- Livewire SPA navigate (si usas wire:navigate en tus enlaces) --}}
+    <livewire:navigate />
+
+    {{-- Scripts de Livewire (v3) --}}
+    @livewireScripts
 </body>
 </html>
-
